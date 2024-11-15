@@ -9,8 +9,6 @@ package Controller;
  * @author ASUS
  */
 import Model.LaporanModel;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class LaporanController {
     private LaporanModel laporanModel;
@@ -19,10 +17,8 @@ public class LaporanController {
         laporanModel = new LaporanModel();
     }
 
-    // Method untuk memproses data laporan dan menyimpannya ke database
-    public boolean tambahLaporan(String namaJalan, String kecamatan, String tingkatKerusakan, String deskripsi) {
-        String tanggalLaporan = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return laporanModel.simpanLaporan(namaJalan, kecamatan, tingkatKerusakan, deskripsi, tanggalLaporan);
+    public boolean simpanLaporan(String namaJalan, String kecamatan, String deskripsi, String tingkatKerusakan, int userId) {
+        String status = "Belum Diproses";
+        return laporanModel.tambahLaporan(namaJalan, kecamatan, deskripsi, tingkatKerusakan, status, userId);
     }
 }
-

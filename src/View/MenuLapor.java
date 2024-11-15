@@ -5,6 +5,7 @@
 package View;
 
 import Controller.LaporanController;
+import Controller.UserController;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,15 +14,14 @@ import javax.swing.JOptionPane;
  */
 public class MenuLapor extends javax.swing.JFrame {
     private LaporanController laporanController;
-    /**
-     * Creates new form MenuLapor
-     */
+    private int userId;
 
-    public MenuLapor() {
+    public MenuLapor(int userId) {
         initComponents();
         setLocationRelativeTo(null); 
         laporanController = new LaporanController();
-        }
+        this.userId = userId;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -132,8 +132,7 @@ public class MenuLapor extends javax.swing.JFrame {
         String tingkatKerusakan = comboBoxKerusakan.getSelectedItem().toString();
         String deskripsi = deskripsiField.getText();
 
-        // Panggil controller untuk menyimpan data
-        boolean berhasil = laporanController.tambahLaporan(namaJalan, kecamatan, tingkatKerusakan, deskripsi);
+        boolean berhasil = laporanController.simpanLaporan(namaJalan, kecamatan, deskripsi, tingkatKerusakan, userId);
         
         if (berhasil) {
             JOptionPane.showMessageDialog(null, "Laporan berhasil ditambahkan");
@@ -142,10 +141,14 @@ public class MenuLapor extends javax.swing.JFrame {
             kecamatanField.setText("");
             comboBoxKerusakan.setSelectedIndex(0);
             deskripsiField.setText("");
+            
+            MenuUser menuUser = new MenuUser(userId); 
+            menuUser.setVisible(true);
+            this.dispose();            
+            
         } else {
             JOptionPane.showMessageDialog(null, "Gagal menambahkan laporan");
         }
-    } 
     }//GEN-LAST:event_buttonKirimActionPerformed
 
     private void deskripsiFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deskripsiFieldActionPerformed
@@ -153,13 +156,16 @@ public class MenuLapor extends javax.swing.JFrame {
     }//GEN-LAST:event_deskripsiFieldActionPerformed
 
     private void buttonKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonKembaliActionPerformed
-
+        MenuUser menuUser = new MenuUser(userId);
+        menuUser.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_buttonKembaliActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        int userId = UserController.getCurrentUserId();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -186,7 +192,7 @@ public class MenuLapor extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-            new MenuLapor().setVisible(true);
+            new MenuLapor(userId).setVisible(true);
             }
         });
     }
@@ -204,4 +210,4 @@ public class MenuLapor extends javax.swing.JFrame {
     private javax.swing.JTextField kecamatanField;
     private javax.swing.JTextField namaJalanField;
     // End of variables declaration//GEN-END:variables
-
+}

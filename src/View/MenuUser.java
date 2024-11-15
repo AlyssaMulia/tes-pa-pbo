@@ -9,13 +9,15 @@ package View;
  * @author ASUS
  */
 public class MenuUser extends javax.swing.JFrame {
+    private static int userId;
 
     /**
      * Creates new form MenuUser
      */
-    public MenuUser() {
+    public MenuUser(int userId) {
         initComponents();
         setLocationRelativeTo(null);
+        this.userId = userId;
     }
 
     /**
@@ -107,7 +109,7 @@ public class MenuUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonlaporActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonlaporActionPerformed
-        MenuLapor menuLapor = new MenuLapor();
+        MenuLapor menuLapor = new MenuLapor(userId);
         menuLapor.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_buttonlaporActionPerformed
@@ -154,7 +156,7 @@ public class MenuUser extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MenuUser().setVisible(true);
+                new MenuUser(userId).setVisible(true);
             }
         });
     }

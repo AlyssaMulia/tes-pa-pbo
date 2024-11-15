@@ -16,6 +16,7 @@ import Model.Pelapor;
  */
 public class Login extends javax.swing.JFrame {
     private UserController userController;
+    private static int userId;
     /**
      * Creates new form Login
      */
@@ -34,9 +35,6 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel6 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        boxRole = new javax.swing.JComboBox<>();
         buttonDaftar = new javax.swing.JToggleButton();
         jLabel4 = new javax.swing.JLabel();
         buttonLogin = new javax.swing.JToggleButton();
@@ -54,25 +52,6 @@ public class Login extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel6.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Role");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 280, 70, 30));
-
-        jLabel5.setFont(new java.awt.Font("Bahnschrift", 1, 13)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("LOG OUT");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 20, 70, 40));
-
-        boxRole.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
-        boxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pelapor", "Admin" }));
-        boxRole.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxRoleActionPerformed(evt);
-            }
-        });
-        getContentPane().add(boxRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 310, 110, 30));
-
         buttonDaftar.setBackground(new java.awt.Color(0, 0, 102));
         buttonDaftar.setFont(new java.awt.Font("Bahnschrift", 0, 10)); // NOI18N
         buttonDaftar.setForeground(new java.awt.Color(255, 255, 255));
@@ -83,12 +62,12 @@ public class Login extends javax.swing.JFrame {
                 buttonDaftarActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonDaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 410, 70, 20));
+        getContentPane().add(buttonDaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 400, 70, 20));
 
         jLabel4.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Belum punya akun?");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 410, -1, 20));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 400, -1, 20));
 
         buttonLogin.setBackground(new java.awt.Color(204, 0, 0));
         buttonLogin.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
@@ -101,10 +80,10 @@ public class Login extends javax.swing.JFrame {
                 buttonLoginActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 360, 90, 30));
+        getContentPane().add(buttonLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 330, 90, 30));
 
         passwordField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
-        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 230, 270, 40));
+        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 260, 270, 40));
 
         usernameField.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         usernameField.addActionListener(new java.awt.event.ActionListener() {
@@ -112,17 +91,17 @@ public class Login extends javax.swing.JFrame {
                 usernameFieldActionPerformed(evt);
             }
         });
-        getContentPane().add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 270, 40));
+        getContentPane().add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 170, 270, 40));
 
         jLabel3.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Password");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 210, 70, 20));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 70, 20));
 
         jLabel2.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Username");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, 80, 30));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, 80, 30));
 
         jLabel1.setFont(new java.awt.Font("Bahnschrift", 1, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -134,7 +113,7 @@ public class Login extends javax.swing.JFrame {
         namaAplikasi.setText("Layanan Pelaporan Jalan Rusak Kota Samarinda");
         getContentPane().add(namaAplikasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, 330, 40));
 
-        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logout.png"))); // NOI18N
+        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/Untitled design (3).png"))); // NOI18N
         background.setText("jLabel1");
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 500));
 
@@ -148,28 +127,24 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldActionPerformed
 
-    private void boxRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxRoleActionPerformed
-
-    }//GEN-LAST:event_boxRoleActionPerformed
-
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
 
     String username = usernameField.getText();
-    String password = new String(passwordField.getPassword());
-    String role = (String) boxRole.getSelectedItem();
+    String password = passwordField.getText();
+//    String role = (String) boxRole.getSelectedItem();
 
     if (username.isEmpty() || password.isEmpty()) {
         JOptionPane.showMessageDialog(null, "Username dan password tidak boleh kosong!");
         return;
     }
 
-    UserModel user = userController.loginUser(username, password, role);
+    UserModel user = userController.loginUser(username, password);
 
     if (user != null) {
-        JOptionPane.showMessageDialog(null, "Login berhasil sebagai " + role + "!");
+//        JOptionPane.showMessageDialog(null, "Login berhasil sebaga"!");
 
         if (user instanceof Pelapor) {
-            MenuUser menuUser = new MenuUser();
+            MenuUser menuUser = new MenuUser(userId);
             menuUser.setVisible(true);
             menuUser.setLocationRelativeTo(null);
         } else if (user instanceof Admin) {
@@ -228,15 +203,12 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;
-    private javax.swing.JComboBox<String> boxRole;
     private javax.swing.JToggleButton buttonDaftar;
     private javax.swing.JToggleButton buttonLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel namaAplikasi;
     private javax.swing.JPasswordField passwordField;

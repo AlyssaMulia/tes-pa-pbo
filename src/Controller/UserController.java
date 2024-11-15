@@ -17,58 +17,102 @@ import java.sql.*;
 
 public class UserController {
     private Connection conn;
+    private static int currentUserId;
 
     public UserController() {
         conn = Database.connect();
     }
-
-    public UserModel loginUser(String username, String password, String role) {
-        String query;
-        // Tentukan query SQL berdasarkan peran (role)
-        if ("Admin".equals(role)) {
-            query = "SELECT * FROM admin WHERE username = ? AND password = ?";
-        } else {
-            query = "SELECT * FROM pelapor WHERE username = ? AND password = ?";
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-
-            // Cek jika ada hasil dari query
-            if (rs.next()) {
-                if ("Admin".equals(role)) {
-                    // Login sebagai Admin
-                    return new Admin(username, password, rs.getString("hak_akses"));
-                } else {
-                    // Login sebagai Pelapor
-                    return new Pelapor(username, password, rs.getString("nama_pelapor"), rs.getString("nomor_telepon"), rs.getString("email"));
-                }
-            } else {
-                System.out.println("Login gagal: Username atau password salah untuk " + role);
-            }
-        } catch (SQLException e) {
-            System.out.println("Kesalahan SQL saat login: " + e.getMessage());
-        }
-        
-        return null; // Mengembalikan null jika login gagal
+    
+    public static int getCurrentUserId() {
+        return currentUserId;
     }
 
-    // Metode registrasi untuk Pelapor
-    public boolean registerPelapor(Pelapor pelapor) {
-        String query = "INSERT INTO pelapor (nama_pelapor, nomor_telepon, email, username, password) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, pelapor.getNama());
-            stmt.setString(2, pelapor.getNoTelp());
-            stmt.setString(3, pelapor.getEmail());
-            stmt.setString(4, pelapor.getUsername());
-            stmt.setString(5, pelapor.getPassword());
-            stmt.executeUpdate();
+public UserModel loginUser(String username, String password) {
+    String queryUser = "SELECT * FROM user WHERE username = ? AND password = ?";
+    try (PreparedStatement stmtUser = conn.prepareStatement(queryUser)) {
+        stmtUser.setString(1, username);
+        stmtUser.setString(2, password);
+        ResultSet rsUser = stmtUser.executeQuery();
+
+        if (rsUser.next()) {
+            int userId = rsUser.getInt("id_user");
+            currentUserId = userId;
+
+            String queryAdmin = "SELECT * FROM admin WHERE id_user = ?";
+            try (PreparedStatement stmtAdmin = conn.prepareStatement(queryAdmin)) {
+                stmtAdmin.setInt(1, userId);
+                ResultSet rsAdmin = stmtAdmin.executeQuery();
+
+                if (rsAdmin.next()) {
+                    return new Admin(username, password, rsAdmin.getString("jabatan"));
+                }
+            }
+
+            String queryPelapor = "SELECT * FROM pelapor WHERE id_user = ?";
+            try (PreparedStatement stmtPelapor = conn.prepareStatement(queryPelapor)) {
+                stmtPelapor.setInt(1, userId);
+                ResultSet rsPelapor = stmtPelapor.executeQuery();
+
+                if (rsPelapor.next()) {
+                    return new Pelapor(username, password, rsPelapor.getString("nama_lengkap"),
+                                       rsPelapor.getString("nomor_telepon"), rsPelapor.getString("email"));
+                }
+            }
+        } else {
+            System.out.println("Login gagal: Username atau password salah");
+        }
+    } catch (SQLException e) {
+        System.out.println("Kesalahan SQL saat login: " + e.getMessage());
+    }
+
+    return null;
+}
+
+public boolean registerPelapor(Pelapor pelapor) {
+    try {
+        conn.setAutoCommit(false);
+
+        String queryUser = "INSERT INTO user (username, password) VALUES (?, ?)";
+        try (PreparedStatement stmtUser = conn.prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS)) {
+            stmtUser.setString(1, pelapor.getUsername());
+            stmtUser.setString(2, pelapor.getPassword());
+            stmtUser.executeUpdate();
+
+            ResultSet generatedKeys = stmtUser.getGeneratedKeys();
+            int userId;
+            if (generatedKeys.next()) {
+                userId = generatedKeys.getInt(1);
+                currentUserId = userId;
+                System.out.println("User ID yang dihasilkan: " + userId); // Debug log
+            } else {
+                throw new SQLException("Gagal mendapatkan user_id.");
+            }
+
+            String queryPelapor = "INSERT INTO pelapor (id_user, nama_lengkap, nomor_telepon, email) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmtPelapor = conn.prepareStatement(queryPelapor)) {
+                stmtPelapor.setInt(1, userId); // Menggunakan userId sebagai id_user di tabel pelapor
+                stmtPelapor.setString(2, pelapor.getNamaLengkap());
+                stmtPelapor.setString(3, pelapor.getNoTelp());
+                stmtPelapor.setString(4, pelapor.getEmail());
+                stmtPelapor.executeUpdate();
+            }
+
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            conn.rollback();
             System.out.println("Registrasi gagal: " + e.getMessage());
             return false;
         }
+    } catch (SQLException e) {
+        System.out.println("Kesalahan dalam pengaturan transaksi: " + e.getMessage());
+        return false;
+    } finally {
+        try {
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            System.out.println("Error mengatur ulang autocommit: " + e.getMessage());
+        }
+    }
     }
 }

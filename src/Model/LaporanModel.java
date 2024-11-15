@@ -8,10 +8,12 @@ package Model;
  *
  * @author ASUS
  */
+import Controller.UserController;
 import Database.Database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 
 public class LaporanModel {
     private Connection conn;
@@ -20,20 +22,24 @@ public class LaporanModel {
         conn = Database.connect();
     }
 
-    public boolean simpanLaporan(String namaJalan, String kecamatan, String tingkatKerusakan, String deskripsi, String tanggalLaporan) {
-        String query = "INSERT INTO laporan (nama_jalan, kecamatan, tingkat_kerusakan, deskripsi, tanggal_laporan) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+    public boolean tambahLaporan(String namaJalan, String kecamatan, String deskripsi, String tingkatKerusakan, String statusLaporan, int userId) {
+        // Tambahkan status_laporan di SQL query dan parameter yang sesuai
+        String sql = "INSERT INTO laporan (nama_jalan, kecamatan, tanggal_laporan, deskripsi, tingkat_kerusakan, status_laporan, user_id_user) VALUES (?, ?, NOW(),?, ?, ?, ?)";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, namaJalan);
             stmt.setString(2, kecamatan);
-            stmt.setString(3, tingkatKerusakan);
-            stmt.setString(4, deskripsi);
-            stmt.setString(5, tanggalLaporan);
+            stmt.setString(3, deskripsi);
+            stmt.setString(4, tingkatKerusakan);
+            stmt.setString(5, statusLaporan);
+            stmt.setInt(6, UserController.getCurrentUserId());
+            
             stmt.executeUpdate();
             return true;
+            
         } catch (SQLException e) {
-            System.out.println("Gagal menyimpan laporan: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 }
-

@@ -24,7 +24,7 @@ public class Database {
     protected static ResultSet resultSet;
 
     private final static String DB_HOST = "localhost";
-    private final static String DB_NAME = "laporjalan";
+    private final static String DB_NAME = "laporjalan1";
     private final static String DB_USERNAME = "root";
     private final static String DB_PASSWORD = "";
 

@@ -20,9 +20,7 @@ public class Admin extends UserModel {
         return jabatan;
     }
 
-    @Override
-    public void tampilkanInfo() {
-        System.out.println("Admin Username: " + username);
-        System.out.println("Jabatan: " + jabatan);
+    public void setJabatan(String jabatan) {
+        this.jabatan = jabatan;
     }
 }

@@ -9,34 +9,39 @@ package Model;
  * @author ASUS
  */
 public class Pelapor extends UserModel {
-    private String nama;
+    private String namaLengkap;
     private String noTelp;
     private String email;
 
-    public Pelapor(String username, String password, String nama, String noTelp, String email) {
+    public Pelapor(String username, String password, String namaLengkap, String noTelp, String email) {
         super(username, password);
-        this.nama = nama;
+        this.namaLengkap = namaLengkap;
         this.noTelp = noTelp;
         this.email = email;
     }
 
-    public String getNama() {
-        return nama;
+    // Getter dan Setter untuk atribut tambahan
+    public String getNamaLengkap() {
+        return namaLengkap;
+    }
+
+    public void setNamaLengkap(String namaLengkap) {
+        this.namaLengkap = namaLengkap;
     }
 
     public String getNoTelp() {
         return noTelp;
     }
 
+    public void setNoTelp(String noTelp) {
+        this.noTelp = noTelp;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    @Override
-    public void tampilkanInfo() {
-        System.out.println("Nama: " + nama);
-        System.out.println("Username: " + username);
-        System.out.println("No Telepon: " + noTelp);
-        System.out.println("Email: " + email);
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
